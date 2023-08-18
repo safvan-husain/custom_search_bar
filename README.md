@@ -150,7 +150,7 @@ class HomeScreen extends StatelessWidget {
 
 ## Issues and Contributions
 
-Please feel free to [report any issues or bugs](https://github.com/safvan-husain/custom_search_bar.git/issues) you encounter. Contributions and pull requests are also welcome!
+Please feel free to [report any issues or bugs](https://github.com/safvan-husain/custom_search_bar/issues) you encounter. Contributions and pull requests are also welcome!
 
 ## License
 
