@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 typedef SearchFilter<T> = List<String?> Function(T t);
 
 Future<T?> showSearchForCustomiseSearchDelegate<T>({
   required BuildContext context,
   required SearchDelegate<T> delegate,
+  Color? backgroundColor,
   String? query = '',
   bool useRootNavigator = false,
 }) {
@@ -13,6 +15,7 @@ Future<T?> showSearchForCustomiseSearchDelegate<T>({
   return Navigator.of(context, rootNavigator: useRootNavigator)
       .push(_SearchPageRoute<T>(
     delegate: delegate,
+    backgroundColor: backgroundColor,
   ));
 }
 
@@ -32,6 +35,11 @@ class SearchScreen<T> extends SearchDelegate<T> {
   final bool itemStartsWith;
   final bool itemEndsWith;
   final Widget Function(T t) itemBuilder;
+  final BoxDecoration? searchBarDecration;
+  final Color? primaryColor;
+  final Color? seconderyColor;
+  final String? hintText;
+  final Widget? cancelWidget;
 
   ///Use the provided parameters [ controller, onSubmitted ] to the TextField.
   ///
@@ -43,7 +51,11 @@ class SearchScreen<T> extends SearchDelegate<T> {
   )? appBarBuilder;
   final Widget failure;
   SearchScreen({
-    String? hintText,
+    this.hintText,
+    this.primaryColor,
+    this.seconderyColor,
+    this.searchBarDecration,
+    this.cancelWidget,
     required this.items,
     required this.filter,
     this.itemStartsWith = false,
@@ -83,10 +95,13 @@ class SearchScreen<T> extends SearchDelegate<T> {
                 Expanded(
                   child: Container(
                     alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColorLight,
-                        border: Border.all(color: Colors.black12),
-                        borderRadius: BorderRadius.circular(30)),
+                    decoration: searchBarDecration ??
+                        BoxDecoration(
+                          color: primaryColor ??
+                              Theme.of(context).primaryColorLight,
+                          border: Border.all(color: Colors.black12),
+                          borderRadius: BorderRadius.circular(30),
+                        ),
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -103,8 +118,8 @@ class SearchScreen<T> extends SearchDelegate<T> {
                               textInputAction: textInputAction,
                               keyboardType: TextInputType.text,
                               onSubmitted: onSubmitted,
-                              decoration: const InputDecoration(
-                                hintText: '',
+                              decoration: InputDecoration(
+                                hintText: hintText ?? 'search here',
                                 border: InputBorder.none,
                                 focusedBorder: InputBorder.none,
                               ),
@@ -120,7 +135,7 @@ class SearchScreen<T> extends SearchDelegate<T> {
                   ),
                 ),
                 const SizedBox(width: 5),
-                InkWell(
+                GestureDetector(
                   onTap: () {
                     if (controller.text == "") {
                       Navigator.of(context).pop();
@@ -128,19 +143,21 @@ class SearchScreen<T> extends SearchDelegate<T> {
                       controller.text = "";
                     }
                   },
-                  child: CircleAvatar(
-                    backgroundColor: Colors.black12,
-                    child: Padding(
-                      padding: const EdgeInsets.all(1),
-                      child: CircleAvatar(
-                        backgroundColor: Theme.of(context).primaryColorLight,
-                        child: const Icon(
-                          Icons.cancel_outlined,
-                          color: Colors.black,
+                  child: cancelWidget ??
+                      CircleAvatar(
+                        backgroundColor: Colors.black12,
+                        child: Padding(
+                          padding: const EdgeInsets.all(1),
+                          child: CircleAvatar(
+                            backgroundColor: primaryColor ??
+                                Theme.of(context).primaryColorLight,
+                            child: const Icon(
+                              Icons.cancel_outlined,
+                              color: Colors.grey,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
                 )
               ],
             ),
@@ -418,6 +435,7 @@ enum _SearchBody {
 class _SearchPageRoute<T> extends PageRoute<T> {
   _SearchPageRoute({
     required this.delegate,
+    required this.backgroundColor,
   }) {
     assert(
       delegate._route == null,
@@ -429,6 +447,7 @@ class _SearchPageRoute<T> extends PageRoute<T> {
   }
 
   final SearchDelegate<T> delegate;
+  final Color? backgroundColor;
 
   @override
   Color? get barrierColor => null;
@@ -471,6 +490,7 @@ class _SearchPageRoute<T> extends PageRoute<T> {
     return _SearchPage<T>(
       delegate: delegate,
       animation: animation,
+      backgroundColor: backgroundColor,
     );
   }
 
@@ -487,10 +507,12 @@ class _SearchPage<T> extends StatefulWidget {
   const _SearchPage({
     required this.delegate,
     required this.animation,
+    required this.backgroundColor,
   });
 
   final SearchDelegate<T> delegate;
   final Animation<double> animation;
+  final Color? backgroundColor;
 
   @override
   State<StatefulWidget> createState() => _SearchPageState<T>();
@@ -623,6 +645,7 @@ class _SearchPageState<T> extends State<_SearchPage<T>> {
         // ),
 
         child: Scaffold(
+          backgroundColor: widget.backgroundColor,
           appBar: widget.delegate.buildAppBar(
             context: context,
             controller: widget.delegate._queryTextController,
