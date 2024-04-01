@@ -7,6 +7,9 @@ customSearchBar is a package that empowers you to have full control over both th
 - **Customizable App Bar:** Enjoy complete control over the design of your app bar, making your search screen truly unique.
 - **Refined Result Filtering:** Effortlessly filter search results based on user input and preferences.
 
+
+![alt taag](https://github.com/safvan-husain/custom_search_bar/blob/main/assets/search_screen.png)
+
 ## Installation
 
 Add the following line to your `pubspec.yaml` file:
