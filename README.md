@@ -8,6 +8,7 @@ customSearchBar is a package that empowers you to have full control over both th
 - **Refined Result Filtering:** Effortlessly filter search results based on user input and preferences.
 
 
+## Default Screen build by the package
 ![alt taag](https://github.com/safvan-husain/custom_search_bar/blob/main/assets/search_screen.png)
 
 ## Installation
