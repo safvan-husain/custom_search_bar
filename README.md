@@ -28,6 +28,7 @@ import 'package:custom_search_bar/custom_search_bar.dart';
 ### Basic example
 
 the following will use default appBar and failure built by this package
+use showSearchForCustomiseSearchDelegate function on a button, and it will open a search screen.
 
 ```dart
 
@@ -50,8 +51,11 @@ class HomeScreen extends StatelessWidget {
                   child: const Icon(Icons.search),
                   onTap: () => showSearchForCustomiseSearchDelegate<User>(
                     context: context,
+                    backgroundColor:Colors.blue,
                     delegate: SearchScreen<User>(
                       itemStartsWith: true,
+                      primaryColor:Colors.white,
+                      seconderyColor:Colors.grey,
                       hintText: 'search here',
                       items: users,
                       filter: (user) => [user.name],
